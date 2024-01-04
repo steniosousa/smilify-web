@@ -1,5 +1,5 @@
 {
-  "name": "tailadmin-react-free",
+  "name": "Smilify-react-free",
   "private": true,
   "version": "1.0.5",
   "type": "module",
@@ -9,12 +9,14 @@
     "preview": "vite preview"
   },
   "author": {
-    "name": "TailAdmin",
-    "email": "hello@tailadmin.com",
-    "url": "https://tailadmin.com"
+    "name": "Smilify",
+    "email": "hello@Smilify.com",
+    "url": "https://Smilify.com"
   },
   "dependencies": {
+    "sweetalert2": "^11.10.0",
     "apexcharts": "^3.41.0",
+    "axios": "^1.6.3",
     "headlessui": "^0.0.0",
     "jsvectormap": "^1.5.3",
     "match-sorter": "^6.3.1",

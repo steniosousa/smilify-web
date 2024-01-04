@@ -1,11 +1,53 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
+import Api from '../../service/api';
+import { useState } from 'react';
+import Swal from 'sweetalert2'
+export default function SignIn() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-const SignIn = () => {
+  async function login() {
+    if (email === '' || password === '') {
+      await Swal.fire({
+        icon: 'info',
+        title: "Preencha todos os campos",
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+      return
+    }
+    try {
+      const { data } = await Api.post('/login', {
+        email,
+        password
+      })
+      console.log(data)
+      localStorage.setItem("user", data);
+      navigate('/')
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+
+    }
+  }
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        { }
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="py-17.5 px-26 text-center">
@@ -146,20 +188,21 @@ const SignIn = () => {
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium">Start for free</span>
+              <span className="mb-1.5 block font-medium">Seja bem-vindo</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign In to TailAdmin
+                LogIn em Smilify
               </h2>
 
               <form>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Email
+                    Email / CNPJ
                   </label>
                   <div className="relative">
                     <input
+                      onChange={(i) => setEmail(i.target.value)}
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Entrar com seu email/CNPJ"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
 
@@ -185,12 +228,13 @@ const SignIn = () => {
 
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Re-type Password
+                    Senha
                   </label>
                   <div className="relative">
                     <input
+                      onChange={(i) => setPassword(i.target.value)}
                       type="password"
-                      placeholder="6+ Characters, 1 Capital letter"
+                      placeholder="Informar sua senha"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
 
@@ -220,8 +264,9 @@ const SignIn = () => {
 
                 <div className="mb-5">
                   <input
-                    type="submit"
-                    value="Sign In"
+                    onClick={login}
+                    type="button"
+                    value="Acessar"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>
@@ -260,14 +305,14 @@ const SignIn = () => {
                       </defs>
                     </svg>
                   </span>
-                  Sign in with Google
+                  LogIn com Google
                 </button>
 
                 <div className="mt-6 text-center">
                   <p>
-                    Don’t have any account?{' '}
+                    Não tem conta?{' '}
                     <Link to="/auth/signup" className="text-primary">
-                      Sign Up
+                      Cadastre-se
                     </Link>
                   </p>
                 </div>
@@ -278,6 +323,6 @@ const SignIn = () => {
       </div>
     </>
   );
-};
 
-export default SignIn;
+}
+
