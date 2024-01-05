@@ -27,6 +27,12 @@ export default function SignIn() {
         email,
         password
       })
+      if (data.firstAccess) {
+        localStorage.setItem("user", data.webToken);
+        localStorage.setItem("firstAccess", data.firstAccess);
+        navigate('/profile')
+        return
+      }
       localStorage.setItem("user", data);
       navigate('/')
     } catch (error: any) {
@@ -200,7 +206,7 @@ export default function SignIn() {
                   <div className="relative">
                     <input
                       onChange={(i) => setEmail(i.target.value)}
-                      type="email"
+                      type="text"
                       placeholder="Entrar com seu email/CNPJ"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
