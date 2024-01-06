@@ -1,44 +1,90 @@
 import Breadcrumb from '../components/Breadcrumb';
 import userThree from '../images/user/user-03.png';
 import fireToast from '../hooks/fireToast';
-import { Table } from "../components/TableSettings";
-import { Modal } from "../components/ModalSettings";
-import { useState,useEffect } from "react";
-const Settings = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [rows, setRows] = useState(localStorage.getItem("alertSettings")?JSON.parse(localStorage.getItem("alertSettings")):[]);
+import Api from '../service/api';
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+
+export default function Settings() {
+  const [name, setName] = useState('smilify')
+  const [phone, setPhone] = useState('smilify')
+  const [email, setEmail] = useState('smilify')
+  const [password, setPassword] = useState('smilify')
+  const id = localStorage.getItem('user')
+
+  async function getUser() {
+    try {
+      const { data } = await Api.get('/find/dentist', {
+        headers: {
+          Authorization: id
+        }
+      })
+      setName(data.name)
+      setEmail(data.email)
+      setPhone(data.phone)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async function handleSend() {
+    const firstAccess = localStorage.getItem('firstAccess')
+    const defaultVar = 'smilify'
+
+    if (firstAccess && password === defaultVar) {
+      await Swal.fire({
+        icon: 'question',
+        title: "Altere sua senha para validar envio",
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+      return
+    }
+
+    try {
+      await Api.post('/update/dentist', {
+        name,
+        email,
+        password
+      }, {
+        headers: {
+          Authorization: id
+        }
+      });
+      await Swal.fire({
+        icon: 'success',
+        title: "Alteração feita com sucesso",
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+      localStorage.removeItem('firstAccess')
+      window.location.reload()
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    // storing input name
-    localStorage.setItem("alertSettings", JSON.stringify(rows));
-  }, [rows]);
-  const [rowToEdit, setRowToEdit] = useState(null);
-
-  const handleDeleteRow = (targetIndex) => {
-    setRows(rows.filter((_, idx) => idx !== targetIndex));
-  };
-
-  const handleEditRow = (idx) => {
-    setRowToEdit(idx);
-
-    setModalOpen(true);
-  };
-
-  const handleSubmit = (newRow) => {
-    rowToEdit === null
-      ? setRows([...rows, newRow])
-      : setRows(
-          rows.map((currRow, idx) => {
-            if (idx !== rowToEdit) return currRow;
-
-            return newRow;
-          })
-        );
-  };
-
+    getUser()
+  }, [])
   return (
     <>
       <div className="mx-auto max-w-270">
-        
+
         <Breadcrumb pageName="Settings" />
 
         <div className="grid grid-cols-5 gap-8">
@@ -57,7 +103,7 @@ const Settings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="fullName"
                       >
-                        Full Name
+                        Nome
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -86,12 +132,12 @@ const Settings = () => {
                           </svg>
                         </span>
                         <input
+                          onChange={(i) => setName(i.target.value)}
                           className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
                           name="fullName"
                           id="fullName"
-                          placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
+                          placeholder={name}
                         />
                       </div>
                     </div>
@@ -101,15 +147,15 @@ const Settings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="phoneNumber"
                       >
-                        Phone Number
+                        Telefone / Celular
                       </label>
                       <input
+                        onChange={(i) => setPhone(i.target.value)}
                         className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
                         name="phoneNumber"
                         id="phoneNumber"
-                        placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
+                        placeholder={phone}
                       />
                     </div>
                   </div>
@@ -148,12 +194,12 @@ const Settings = () => {
                         </svg>
                       </span>
                       <input
+                        onChange={(i) => setEmail(i.target.value)}
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="email"
                         name="emailAddress"
                         id="emailAddress"
-                        placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
+                        placeholder={email}
                       />
                     </div>
                   </div>
@@ -161,17 +207,17 @@ const Settings = () => {
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
+                      htmlFor="password"
                     >
-                      Username
+                      Senha
                     </label>
                     <input
+                      onChange={(i) => setPassword(i.target.value)}
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="text"
+                      type="password"
                       name="Username"
-                      id="Username"
-                      placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
+                      id="password"
+                      placeholder={password}
                     />
                   </div>
 
@@ -228,16 +274,16 @@ const Settings = () => {
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
+                      type="button"
                     >
                       Cancel
                     </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
-                      type="submit"
-                      onClick={fireToast}
+                      type="button"
+                      onClick={handleSend}
                     >
-                      Save
+                      Enviar
                     </button>
                   </div>
                 </form>
@@ -343,4 +389,3 @@ const Settings = () => {
   );
 };
 
-export default Settings;

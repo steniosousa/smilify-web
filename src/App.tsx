@@ -27,10 +27,12 @@ function App() {
       denyButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar'
     })
-    navigate("/profile");
+    navigate("/settings");
   }
 
   useEffect(() => {
+    setTimeout(() => setLoading(false), 1000);
+
     const hashFromLocalStorage = localStorage.getItem('user');
     const firstAccess = localStorage.getItem("firstAccess");
     if (window.location.pathname != '/auth/signin' && !hashFromLocalStorage) {
@@ -39,7 +41,6 @@ function App() {
     if (firstAccess) {
       firstAcess()
     }
-    setTimeout(() => setLoading(false), 1000);
   }, []);
 
   return loading ? (
