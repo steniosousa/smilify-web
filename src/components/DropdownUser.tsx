@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import UserOne from '../images/user/user-01.png';
+import AuthContext from '../contexto/AuthContext';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate()
+  const context = useContext(AuthContext);
+
   function logout() {
-    navigate('/auth/signin')
-    localStorage.removeItem('user')
+    context.Logout()
   }
 
   const trigger = useRef<any>(null);

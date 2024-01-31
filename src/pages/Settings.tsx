@@ -10,7 +10,7 @@ export default function Settings() {
   const [phone, setPhone] = useState('smilify')
   const [email, setEmail] = useState('smilify')
   const [password, setPassword] = useState('smilify')
-  const id = localStorage.getItem('user')
+  const id = localStorage.getItem('webToken')
 
   async function getUser() {
     try {

@@ -20,7 +20,7 @@ export default function FormLayout() {
       })
       return
     }
-    const key = localStorage.getItem('user')
+    const key = localStorage.getItem('webToken')
     try {
       const roomInInt = parseInt(room)
       let config = {

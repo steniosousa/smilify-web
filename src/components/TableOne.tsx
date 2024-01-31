@@ -13,7 +13,7 @@ interface doctor {
 
 }
 export default function TableOne() {
-  const userId = localStorage.getItem("user");
+  const userId = localStorage.getItem("webToken");
   const [doctors, setDoctors] = useState([])
 
   async function recoverUsers() {
