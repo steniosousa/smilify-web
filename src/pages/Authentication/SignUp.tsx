@@ -2,6 +2,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Api from '../../service/api';
 import { useEffect, useState } from 'react';
+
+
+
 export default function SignUp() {
   const navigate = useNavigate();
   const [pass1, setPass1] = useState('')
@@ -10,10 +13,10 @@ export default function SignUp() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [cep, setCep] = useState('')
-  const [street, setStreet] = useState("Informe a Rua do estabelecimento")
+  const [street, setStreet] = useState("")
   const [country, setCountry] = useState('')
-  const [district, setDistrict] = useState("Informe o Bairro do estabelecimento")
-  const [city, setCity] = useState("Informe a cidade do estabelecimento")
+  const [district, setDistrict] = useState("")
+  const [city, setCity] = useState("")
   const [cnpj, setCnpj] = useState('')
   const [number, setNumber] = useState('')
   const [phone, setPhone] = useState('')
@@ -33,9 +36,26 @@ export default function SignUp() {
     }
     setPassword(pass1)
     if (name == '' || password === '' || email === '' || cep === '' || street === '' || country === '' || district === '' || city === '' || cnpj === '' || phone === '' || number === '') {
+
+      const itens: any = {
+        name, password, email, cep, street, country, district, city, cnpj, phone, number
+      }
+
+      const tradutor: any = {
+        name:"Nome", password:'Senha', email:"Email", cep:"CEP", street:"Rua", country:"País", district:"Bairro", city:"Cidade", cnpj:"CPNJ", phone:"TELEFONE", number:"Número"
+      }
+      let itensEmpty: string[] = []
+      for (let item in itens) {
+        if (itens[item] === '') {
+          itensEmpty.push(` ${tradutor[item]}` )
+        }
+      }
+      console.log(itensEmpty)
+
       await Swal.fire({
         icon: 'warning',
         title: "Preencha todos os campos",
+        text:`Campos vazios: ${itensEmpty}`,
         showDenyButton: false,
         showCancelButton: false,
         showConfirmButton: true,
@@ -219,7 +239,7 @@ export default function SignUp() {
                 <input
                   onChange={(i) => setStreet(i.target.value)}
                   type="text"
-                  placeholder={street}
+                  placeholder={street || "Informe a rua do estabelecimento"}
                   className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
 
@@ -249,7 +269,7 @@ export default function SignUp() {
                 <input
                   onChange={(i) => setDistrict(i.target.value)}
                   type="text"
-                  placeholder={district}
+                  placeholder={district || "Informe o bairro do estabelecimento"}
                   className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
 
@@ -264,7 +284,7 @@ export default function SignUp() {
                 <input
                   onChange={(i) => setCity(i.target.value)}
                   type="text"
-                  placeholder={city}
+                  placeholder={city || "Informe a cidade do estabelecimento"}
                   className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
 
