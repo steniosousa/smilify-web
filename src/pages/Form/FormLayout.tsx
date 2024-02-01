@@ -27,9 +27,6 @@ export default function FormLayout() {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'http://localhost:3333/create/dentist',
-        headers: {
-          'Authorization': user
-        },
         data: {
           room: roomInInt,
           email

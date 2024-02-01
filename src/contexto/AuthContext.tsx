@@ -8,7 +8,7 @@ interface AuthContextData {
   user: string | null;
   Login(credentials: { email: string; password: string }): Promise<void>;
   Logout(): null;
-  setUser:any
+  setUser: any
 }
 
 
@@ -31,7 +31,7 @@ export const AuthProvider: any = ({ children }: any) => {
         return
       }
       localStorage.setItem("webToken", data);
-
+      Api.defaults.headers.Authorization = data
       navigate('/')
     }
     catch (error: any) {
@@ -55,7 +55,7 @@ export const AuthProvider: any = ({ children }: any) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signed: Boolean(user), user,setUser, Login, Logout }}>
+    <AuthContext.Provider value={{ signed: Boolean(user), user, setUser, Login, Logout }}>
       {children}
     </AuthContext.Provider>
   );

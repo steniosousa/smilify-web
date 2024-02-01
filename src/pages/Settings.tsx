@@ -9,15 +9,10 @@ export default function Settings() {
   const [phone, setPhone] = useState('smilify')
   const [email, setEmail] = useState('smilify')
   const [password, setPassword] = useState('smilify')
-  const id = localStorage.getItem('webToken')
 
   async function getUser() {
     try {
-      const { data } = await Api.get('/find/dentist', {
-        headers: {
-          Authorization: id
-        }
-      })
+      const { data } = await Api.get('/find/dentist')
       setName(data.name)
       setEmail(data.email)
       setPhone(data.phone)
@@ -48,10 +43,6 @@ export default function Settings() {
         name,
         email,
         password
-      }, {
-        headers: {
-          Authorization: id
-        }
       });
       await Swal.fire({
         icon: 'success',

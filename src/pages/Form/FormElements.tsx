@@ -9,11 +9,7 @@ export default function FormElements() {
   async function handleGetDentists() {
     try {
       if (!user) return
-      const { data } = await Api.get('/recover/dentist', {
-        headers: {
-          Authorization: user
-        }
-      })
+      const { data } = await Api.get('/recover/dentist')
       console.log(data)
     } catch (error: any) {
       await Swal.fire({
