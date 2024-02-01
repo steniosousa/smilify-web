@@ -1,6 +1,5 @@
 import Breadcrumb from '../components/Breadcrumb';
 import userThree from '../images/user/user-03.png';
-import fireToast from '../hooks/fireToast';
 import Api from '../service/api';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';

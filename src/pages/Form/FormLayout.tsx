@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import AuthContext from '../../contexto/AuthContext';
 
 export default function FormLayout() {
   const [room, setRoom] = useState('')
   const [email, setEmail] = useState('')
-
+  const { user } = useContext(AuthContext)
   async function registerDentist() {
     if (room === '' || email === "") {
       await Swal.fire({
@@ -20,7 +21,6 @@ export default function FormLayout() {
       })
       return
     }
-    const key = localStorage.getItem('webToken')
     try {
       const roomInInt = parseInt(room)
       let config = {
@@ -28,7 +28,7 @@ export default function FormLayout() {
         maxBodyLength: Infinity,
         url: 'http://localhost:3333/create/dentist',
         headers: {
-          'Authorization': key
+          'Authorization': user
         },
         data: {
           room: roomInInt,

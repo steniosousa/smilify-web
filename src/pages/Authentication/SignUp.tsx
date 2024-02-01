@@ -102,9 +102,7 @@ export default function SignUp() {
       setCity(data.city)
       setDistrict(data.neighborhood)
       setStreet(data.street)
-      console.log(data.city)
     } catch (error: any) {
-      console.log(error)
       await Swal.fire({
         icon: 'error',
         title: error.response.data,

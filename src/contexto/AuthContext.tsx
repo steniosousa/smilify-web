@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 interface AuthContextData {
   signed: boolean;
-  user: object | null;
-  Login(): Promise<void>;
-  Logout(): null
+  user: string | null;
+  Login(credentials: { email: string; password: string }): Promise<void>;
+  Logout(): null;
+  setUser:any
 }
 
 
@@ -15,20 +16,22 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: any = ({ children }: any) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  async function Login() {
+  async function Login({ email, password }: { email: string, password: string }) {
     try {
       const { data } = await Api.post('/login', {
-        email: 'steniosousaf@gmail.com',
-        password: '1029qpwo$',
+        email,
+        password,
       });
+      setUser(data);
+
       if (data.firstAccess) {
-        localStorage.setItem("user", data.webToken);
+        localStorage.setItem("webToken", data.webToken);
         localStorage.setItem("firstAccess", data.firstAccess);
         navigate('/profile')
         return
       }
-      setUser(data);
       localStorage.setItem("webToken", data);
+
       navigate('/')
     }
     catch (error: any) {
@@ -52,7 +55,7 @@ export const AuthProvider: any = ({ children }: any) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signed: Boolean(user), user, Login, Logout }}>
+    <AuthContext.Provider value={{ signed: Boolean(user), user,setUser, Login, Logout }}>
       {children}
     </AuthContext.Provider>
   );

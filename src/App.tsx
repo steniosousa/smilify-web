@@ -12,9 +12,13 @@ const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
-  const { signed } = useContext(AuthContext);
+  const { signed, setUser } = useContext(AuthContext);
 
   useEffect(() => {
+    const webToken = localStorage.getItem('webToken')
+
+    if (webToken) setUser(webToken)
+
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
@@ -52,9 +56,7 @@ function App() {
             })}
           </Route>
         </Routes>
-
       )}
-
     </>
   );
 }
