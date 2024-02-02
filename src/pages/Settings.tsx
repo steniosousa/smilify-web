@@ -9,6 +9,8 @@ export default function Settings() {
   const [phone, setPhone] = useState('smilify')
   const [email, setEmail] = useState('smilify')
   const [password, setPassword] = useState('smilify')
+  const [file, setFile] = useState(null)
+
   async function getUser() {
     try {
       const { data } = await Api.get('/find/dentist')
@@ -69,6 +71,10 @@ export default function Settings() {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    console.log(file)
+  }, [file])
   useEffect(() => {
     getUser()
   }, [])
@@ -314,6 +320,7 @@ export default function Settings() {
                     className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border-2 border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
                   >
                     <input
+                      onChange={(e: any) => setFile(e.target.files[0])}
                       type="file"
                       accept="image/*"
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"

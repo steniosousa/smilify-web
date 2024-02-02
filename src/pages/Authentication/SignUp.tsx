@@ -50,7 +50,6 @@ export default function SignUp() {
           itensEmpty.push(` ${tradutor[item]}` )
         }
       }
-      console.log(itensEmpty)
 
       await Swal.fire({
         icon: 'warning',
@@ -68,7 +67,7 @@ export default function SignUp() {
     const body = {
       name, password, email, cep, street, country, district, city, cnpj, phone, number: numberInInt
     }
-
+    console.log(body)
     try {
       await Api.post('create/clinic', body)
       await Swal.fire({
@@ -117,7 +116,7 @@ export default function SignUp() {
   }
 
   useEffect(() => {
-    if (cep.length == 9) {
+    if (cep.length >= 8) {
       validadeCep()
 
     }

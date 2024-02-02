@@ -180,7 +180,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              eCommerce
+                              Dashboard
                             </NavLink>
                           </li>
                         </ul>
@@ -213,7 +213,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       fill=""
                     />
                   </svg>
-                  Calendar
+                  Calendario
                 </NavLink>
               </li>
               {/* <!-- Menu Item Calendar --> */}
@@ -242,7 +242,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       fill=""
                     />
                   </svg>
-                  Profile
+                  Perfil
                 </NavLink>
               </li>
               {/* <!-- Menu Item Profile --> */}
@@ -385,7 +385,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  Tables
+                  Tabelas
                 </NavLink>
               </li>
               {/* <!-- Menu Item Tables --> */}
@@ -427,7 +427,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </clipPath>
                     </defs>
                   </svg>
-                  Settings
+                  Configurações
                 </NavLink>
               </li>
               {/* <!-- Menu Item Settings --> */}
