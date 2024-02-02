@@ -9,7 +9,6 @@ export default function Settings() {
   const [phone, setPhone] = useState('smilify')
   const [email, setEmail] = useState('smilify')
   const [password, setPassword] = useState('smilify')
-
   async function getUser() {
     try {
       const { data } = await Api.get('/find/dentist')
@@ -22,6 +21,7 @@ export default function Settings() {
   }
 
   async function handleSend() {
+    console.log('oi')
     const firstAccess = localStorage.getItem('firstAccess')
     const defaultVar = 'smilify'
 
@@ -37,12 +37,12 @@ export default function Settings() {
       })
       return
     }
-
     try {
-      await Api.post('/update/dentist', {
+      await Api.patch('/update/dentist', {
         name,
         email,
         password
+
       });
       await Swal.fire({
         icon: 'success',
@@ -56,6 +56,7 @@ export default function Settings() {
       localStorage.removeItem('firstAccess')
       window.location.reload()
     } catch (error: any) {
+      console.log(error)
       await Swal.fire({
         icon: 'error',
         title: error.response.data,
@@ -75,14 +76,14 @@ export default function Settings() {
     <>
       <div className="mx-auto max-w-270">
 
-        <Breadcrumb pageName="Settings" />
+        <Breadcrumb pageName="Configurações" />
 
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Personal Information
+                  Informações Pessoais
                 </h3>
               </div>
               <div className="p-7">
@@ -155,7 +156,7 @@ export default function Settings() {
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="emailAddress"
                     >
-                      Email Address
+                      Email
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -205,7 +206,7 @@ export default function Settings() {
                       onChange={(i) => setPassword(i.target.value)}
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       type="password"
-                      name="Username"
+                      name="Password"
                       id="password"
                       placeholder={password}
                     />
@@ -284,7 +285,7 @@ export default function Settings() {
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Your Photo
+                  Sua foto
                 </h3>
               </div>
               <div className="p-7">
@@ -295,14 +296,14 @@ export default function Settings() {
                     </div>
                     <div>
                       <span className="mb-1.5 text-black dark:text-white">
-                        Edit your photo
+                        Editar sua foto
                       </span>
                       <span className="flex gap-2.5">
                         <button className="text-sm hover:text-primary">
                           Delete
                         </button>
                         <button className="text-sm hover:text-primary">
-                          Update
+                          Atualizar
                         </button>
                       </span>
                     </div>
@@ -347,8 +348,8 @@ export default function Settings() {
                         </svg>
                       </span>
                       <p>
-                        <span className="text-primary">Click to upload</span> or
-                        drag and drop
+                        <span className="text-primary">Clique para selecionar</span> ou
+                        arraste e solte
                       </p>
                       <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                       <p>(max, 800 X 800px)</p>
@@ -360,13 +361,13 @@ export default function Settings() {
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                       type="submit"
                     >
-                      Cancel
+                      Cancelar
                     </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       type="submit"
                     >
-                      Save
+                      Salvar
                     </button>
                   </div>
                 </form>

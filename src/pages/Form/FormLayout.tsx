@@ -1,13 +1,12 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import AuthContext from '../../contexto/AuthContext';
+import Api from '../../service/api';
 
 export default function FormLayout() {
   const [room, setRoom] = useState('')
   const [email, setEmail] = useState('')
-  const { user } = useContext(AuthContext)
   async function registerDentist() {
     if (room === '' || email === "") {
       await Swal.fire({
@@ -23,17 +22,11 @@ export default function FormLayout() {
     }
     try {
       const roomInInt = parseInt(room)
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'http://localhost:3333/create/dentist',
-        data: {
-          room: roomInInt,
-          email
-        }
-      };
 
-      await axios.request(config)
+      await Api.post('/create/dentist', {
+        room: roomInInt,
+        email
+      })
       setRoom('')
       setEmail('')
       await Swal.fire({

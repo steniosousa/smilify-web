@@ -148,13 +148,10 @@ export default function TableOne() {
                 {cnqtdPagination.map((item) => {
                   return (
                     <div key={Math.random()} >
-                      {item == results / 5 ? (
-
+                      {item == Math.ceil(results / 5) ? (
                         <a onClick={() => recoverUsers(item)} className="dark:bg-white dark:text-black bg-black text-gray-900 cursor-pointer relative inline-flex items-center px-4 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">{item}</a>
-
                       ) : (
                         <a onClick={() => recoverUsers(item)} className={css}>{item}</a>
-
                       )}
                     </div>
                   )

@@ -25,6 +25,7 @@ export const AuthProvider: any = ({ children }: any) => {
       setUser(data);
 
       if (data.firstAccess) {
+        Api.defaults.headers.Authorization = data.webToken
         localStorage.setItem("webToken", data.webToken);
         localStorage.setItem("firstAccess", data.firstAccess);
         navigate('/profile')
@@ -48,6 +49,7 @@ export const AuthProvider: any = ({ children }: any) => {
   }
 
   function Logout() {
+    Api.defaults.headers.Authorization = null
     localStorage.clear();
     setUser(null);
     navigate('/auth/signin')
