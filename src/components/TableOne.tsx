@@ -1,14 +1,15 @@
 import Swal from 'sweetalert2';
-import userImage from '../images/user/user-01.png';
 import Api from '../service/api';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface doctor {
   id: string,
   room: number,
   name: string,
   appointments: string[],
-  doctorServices: string[]
+  doctorServices: string[],
+  photo: string
 
 }
 export default function TableOne() {
@@ -16,6 +17,7 @@ export default function TableOne() {
   const [results, setResults] = useState(0)
   const [count, setCount] = useState(0)
   const [cnqtdPagination, setcnqtdPagination] = useState<any[]>([])
+  const navigate = useNavigate()
   let css = "cursor-pointer relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 
   async function recoverUsers(page: number) {
@@ -97,9 +99,9 @@ export default function TableOne() {
         </div>
         {doctors.map((doctor: doctor) => {
           return (
-            <div className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-5 p-4" key={doctor.id}>
+            <div className="cursor-pointer grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-5 p-4" key={doctor.id} onClick={() => navigate('/profile', { state: { id: doctor.id } })}>
               <div className="flex-shrink-0">
-                <img src={userImage} alt="Brand" className="w-16 h-16 rounded-full align-center ml-3" />
+                <img src={doctor.photo} alt="Brand" className="w-16 h-16 rounded-full align-center ml-3" />
               </div>
               <div className="flex items-center gap-3 p-2.5 xl:p-5">
                 <p className="hidden text-black dark:text-white sm:block">{doctor.name}</p>

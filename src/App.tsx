@@ -18,10 +18,12 @@ function App() {
 
   useEffect(() => {
     const webToken = localStorage.getItem('webToken')
+    const role = localStorage.getItem('role')
+    
     if (webToken) {
       Api.defaults.headers.Authorization = webToken
-      setUser(webToken)
-    }else{
+      setUser({ webToken, role })
+    } else {
       navigate('/auth/signin')
     }
 

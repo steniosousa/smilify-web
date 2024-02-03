@@ -23,16 +23,17 @@ export const AuthProvider: any = ({ children }: any) => {
         password,
       });
       setUser(data);
-
       if (data.firstAccess) {
         Api.defaults.headers.Authorization = data.webToken
         localStorage.setItem("webToken", data.webToken);
+        localStorage.setItem('role', data.role)
         localStorage.setItem("firstAccess", data.firstAccess);
         navigate('/profile')
         return
       }
-      localStorage.setItem("webToken", data);
-      Api.defaults.headers.Authorization = data
+      localStorage.setItem('role', data.role)
+      localStorage.setItem("webToken", data.webToken);
+      Api.defaults.headers.Authorization = data.webToken
       navigate('/')
     }
     catch (error: any) {
