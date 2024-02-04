@@ -3,6 +3,7 @@ import Breadcrumb from '../components/Breadcrumb';
 import Api from '../service/api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from '../contexto/AuthContext';
+import Swal from 'sweetalert2';
 
 const Profile = () => {
   const { state } = useLocation();
@@ -39,8 +40,16 @@ const Profile = () => {
         setServices(data._count.doctorServices)
       }
 
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
     }
   }
 
