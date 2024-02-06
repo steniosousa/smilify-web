@@ -13,6 +13,7 @@ export default function Settings() {
   const { user } = useContext<any>(AuthContext);
   const [photo, setPhoto] = useState('')
   const [file, setFile] = useState(null)
+
   async function getUser() {
     try {
       const { data } = await Api.get('/find/dentist')
@@ -98,14 +99,11 @@ export default function Settings() {
         })
         return;
       }
-    }
-
-    if (file) {
       const reader: any = new FileReader();
       reader.onloadend = () => {
         setFile(reader.result);
       };
-
+  
       reader.readAsDataURL(file);
     }
   };
@@ -147,7 +145,7 @@ export default function Settings() {
         confirmButtonText: 'Confirmar'
       })
       setFile(null)
-      // getUser()
+      getUser()
     } catch (error: any) {
       await Swal.fire({
         icon: 'error',

@@ -22,6 +22,8 @@ export default function SignUp() {
   const [phone, setPhone] = useState('')
 
   async function register() {
+    setPassword(pass1)
+
     if (pass1 !== pass2) {
       await Swal.fire({
         icon: 'error',
@@ -34,27 +36,24 @@ export default function SignUp() {
       })
       return
     }
-    setPassword(pass1)
-    if (name == '' || password === '' || email === '' || cep === '' || street === '' || country === '' || district === '' || city === '' || cnpj === '' || phone === '' || number === '') {
-
+    if (name == '' || pass1 === '' || email === '' || cep === '' || street === '' || country === '' || district === '' || city === '' || cnpj === '' || phone === '' || number === '') {
       const itens: any = {
-        name, password, email, cep, street, country, district, city, cnpj, phone, number
+        name, pass1, email, cep, street, country, district, city, cnpj, phone, number
       }
-
       const tradutor: any = {
-        name:"Nome", password:'Senha', email:"Email", cep:"CEP", street:"Rua", country:"País", district:"Bairro", city:"Cidade", cnpj:"CPNJ", phone:"TELEFONE", number:"Número"
+        name: "Nome", pass1: 'Senha', email: "Email", cep: "CEP", street: "Rua", country: "País", district: "Bairro", city: "Cidade", cnpj: "CPNJ", phone: "TELEFONE", number: "Número"
       }
       let itensEmpty: string[] = []
       for (let item in itens) {
         if (itens[item] === '') {
-          itensEmpty.push(` ${tradutor[item]}` )
+          itensEmpty.push(` ${tradutor[item]}`)
         }
       }
 
       await Swal.fire({
         icon: 'warning',
         title: "Preencha todos os campos",
-        text:`Campos vazios: ${itensEmpty}`,
+        text: `Campos vazios: ${itensEmpty}`,
         showDenyButton: false,
         showCancelButton: false,
         showConfirmButton: true,
@@ -67,7 +66,6 @@ export default function SignUp() {
     const body = {
       name, password, email, cep, street, country, district, city, cnpj, phone, number: numberInInt
     }
-    console.log(body)
     try {
       await Api.post('create/clinic', body)
       await Swal.fire({
@@ -91,7 +89,10 @@ export default function SignUp() {
         confirmButtonText: 'Confirmar'
       })
     }
+
+
   }
+
 
   async function validadeCep() {
     try {
