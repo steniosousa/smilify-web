@@ -1,8 +1,7 @@
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 const Api = axios.create({
-    baseURL: 'http://localhost:3333'
+    baseURL: 'https://smilify-api.onrender.com'
 });
 
 
