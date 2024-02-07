@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const Api = axios.create({
     baseURL: 'https://smilify-api.onrender.com'
+    // baseURL: 'http://localhost:3333'
 });
 
 
@@ -11,7 +12,7 @@ Api.interceptors.response.use(
         return response;
     },
     async error => {
-        
+
 
         if (error.response && error.response.status === 401) {
             localStorage.clear()

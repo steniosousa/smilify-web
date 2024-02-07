@@ -22,7 +22,6 @@ export default function SignUp() {
   const [phone, setPhone] = useState('')
 
   async function register() {
-    setPassword(pass1)
 
     if (pass1 !== pass2) {
       await Swal.fire({
@@ -36,6 +35,8 @@ export default function SignUp() {
       })
       return
     }
+    setPassword(pass1)
+
     if (name == '' || pass1 === '' || email === '' || cep === '' || street === '' || country === '' || district === '' || city === '' || cnpj === '' || phone === '' || number === '') {
       const itens: any = {
         name, pass1, email, cep, street, country, district, city, cnpj, phone, number
@@ -66,6 +67,7 @@ export default function SignUp() {
     const body = {
       name, password, email, cep, street, country, district, city, cnpj, phone, number: numberInInt
     }
+
     try {
       await Api.post('create/clinic', body)
       await Swal.fire({

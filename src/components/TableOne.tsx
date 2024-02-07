@@ -50,7 +50,7 @@ export default function TableOne() {
         await Swal.fire({
           icon: 'error',
           title: "Clínica não autorizada",
-          html:"Efetue o pagamento para validar sua conta",
+          html: "Efetue o pagamento para validar sua conta",
           showDenyButton: false,
           showCancelButton: false,
           showConfirmButton: false,
