@@ -6,6 +6,7 @@ import AuthContext from '../contexto/AuthContext';
 import Swal from 'sweetalert2';
 import { Fragment, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import TableThree from '../components/TableThree';
 
 const Profile = () => {
   const { state } = useLocation();
@@ -362,6 +363,9 @@ const Profile = () => {
         </div>
 
       </div >
+      <div className=" mt-2">
+        <TableThree />
+      </div>
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-9999 " initialFocus={cancelButtonRef} onClose={setOpen}>
           <Transition.Child

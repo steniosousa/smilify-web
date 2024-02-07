@@ -46,6 +46,19 @@ export default function TableOne() {
       setcnqtdPagination(createArr);
 
     } catch (error: any) {
+      if (error.response.status == 406) {
+        await Swal.fire({
+          icon: 'error',
+          title: "Clínica não autorizada",
+          html:"Efetue o pagamento para validar sua conta",
+          showDenyButton: false,
+          showCancelButton: false,
+          showConfirmButton: false,
+          allowOutsideClick: false
+
+        })
+        return
+      }
       await Swal.fire({
         icon: 'error',
         title: error.response.data,

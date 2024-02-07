@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import Logo from '../images/logo/logo.jpeg';
+import Logo from '../images/icon/icon.png';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import AuthContext from '../contexto/AuthContext';
 
@@ -64,8 +64,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        <NavLink to="/">
-          <img src={Logo} alt="Logo" />
+        <NavLink to="/" className='border-b flex flex-row justify-center items-center align-center  mt-4 ml-4 mb-0.5 gap-2'>
+          <img src={Logo} alt="Logo" className='h-4 w-4' />
+          <h1 className='text-bodydark1 text-3xl '>S M I L I F Y</h1>
+          <img src={Logo} alt="Logo" className='h-4 w-4' />
         </NavLink>
 
         <button

@@ -10,6 +10,7 @@ const DropdownUser = () => {
   const [photo, setPhoto] = useState('')
   const role = localStorage.getItem('role')
   async function getUser() {
+    if (role == 'clinic') return
     try {
       const { data } = await Api.get('/find/dentist')
       setName(data.name)

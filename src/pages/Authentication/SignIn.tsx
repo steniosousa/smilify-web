@@ -33,7 +33,7 @@ export default function SignIn() {
           <div className="py-17.5 px-26 text-center">
             <img src={Logo} alt="Logo" />
             <span className=" min-h-screen">
-              <p>oi</p>
+              <p >Gestão e Automação em Clínicas odontológicas</p>
             </span>
           </div>
         </div>
