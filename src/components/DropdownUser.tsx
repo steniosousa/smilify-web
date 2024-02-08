@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../contexto/AuthContext';
 import Api from '../service/api';
-
+import logoAny  from '../images/icon/icon-any.png'
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const context = useContext(AuthContext);
@@ -68,7 +68,7 @@ const DropdownUser = () => {
 
         <span className="h-12 w-12 rounded-full overflow-hidden">
           <img
-            src={photo}
+            src={photo ? photo : logoAny}
             alt="User"
             style={{ borderRadius: '50%', width: '100%', height: '100%', objectFit: 'cover' }}
           />

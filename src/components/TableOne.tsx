@@ -2,7 +2,7 @@ import Swal from 'sweetalert2';
 import Api from '../service/api';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { whatsapp } from '../images/icon/whatsapp.png'
 interface doctor {
   id: string,
   room: number,
@@ -53,10 +53,25 @@ export default function TableOne() {
           html: "Efetue o pagamento para validar sua conta",
           showDenyButton: false,
           showCancelButton: false,
-          showConfirmButton: false,
-          allowOutsideClick: false
-
-        })
+          showConfirmButton: false, 
+          allowOutsideClick: false,
+          footer: `
+          <div >
+          <span style="margin-right: 5px;">Converse conosco</span>
+            <div style="display:flex; flex-direction: row; justify-content:space-around;margin-top:20px;margin-bottom:20px">
+              <a href="https://web.whatsapp.com/" target="_blank" rel="noopener noreferrer">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3670/3670051.png" alt="WhatsApp" style="width: 32px; height: 32px;">
+              </a>
+              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                <img src="https://w7.pngwing.com/pngs/16/46/png-transparent-made-in-kings-heath-instagram-facebook-female-graphy-instagram-logo-instagram-icon-text-trademark-magenta-thumbnail.png" alt="Instagram" style="width: 32px; height: 32px;">
+              </a>
+              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+              <img src="https://cdn-icons-png.flaticon.com/256/174/174857.png" alt="likedin" style="width: 32px; height: 32px;">
+            </a>
+            </div>  
+          </div>
+          `
+        });
         return
       }
       await Swal.fire({

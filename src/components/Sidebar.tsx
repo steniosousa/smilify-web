@@ -15,7 +15,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const { user } = useContext<any>(AuthContext)
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
-  const role = localStorage.getItem('role')
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
@@ -65,9 +64,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/" className='border-b flex flex-row justify-center items-center align-center  mt-4 ml-4 mb-0.5 gap-2'>
-          <img src={Logo} alt="Logo" className='h-4 w-4' />
+          <img src={Logo} alt="Logo" className='h-8 w-8' />
           <h1 className='text-bodydark1 text-3xl '>S M I L I F Y</h1>
-          <img src={Logo} alt="Logo" className='h-4 w-4' />
+          <p className='mb-4'>br</p>
         </NavLink>
 
         <button

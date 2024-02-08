@@ -10,7 +10,6 @@ export default function SignUp() {
   const [pass1, setPass1] = useState('')
   const [pass2, setPass2] = useState('')
   const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [cep, setCep] = useState('')
   const [street, setStreet] = useState("")
@@ -22,7 +21,6 @@ export default function SignUp() {
   const [phone, setPhone] = useState('')
 
   async function register() {
-
     if (pass1 !== pass2) {
       await Swal.fire({
         icon: 'error',
@@ -35,7 +33,7 @@ export default function SignUp() {
       })
       return
     }
-    setPassword(pass1)
+    const numberInInt = parseInt(number)
 
     if (name == '' || pass1 === '' || email === '' || cep === '' || street === '' || country === '' || district === '' || city === '' || cnpj === '' || phone === '' || number === '') {
       const itens: any = {
@@ -63,9 +61,8 @@ export default function SignUp() {
       })
       return
     }
-    const numberInInt = parseInt(number)
     const body = {
-      name, password, email, cep, street, country, district, city, cnpj, phone, number: numberInInt
+      name, password: pass1, email, cep, street, country, district, city, cnpj, phone, number: numberInInt
     }
 
     try {

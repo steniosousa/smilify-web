@@ -3,6 +3,9 @@ import AuthContext from '../contexto/AuthContext';
 import Api from '../service/api';
 import { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 export default function Settings() {
   const [name, setName] = useState('smilify')
@@ -10,25 +13,40 @@ export default function Settings() {
   const [email, setEmail] = useState('smilify')
   const [password, setPassword] = useState('smilify')
   const [bio, setBio] = useState('')
+  const [bioText, setBioText] = useState('')
+  const [ tel, setText] = useState('')
   const { user } = useContext<any>(AuthContext);
   const [photo, setPhoto] = useState('')
   const [file, setFile] = useState(null)
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getUser() {
+    if (user.role == "clinic") return
     try {
       const { data } = await Api.get('/find/dentist')
       setName(data.name)
       setEmail(data.email)
       setPhone(data.phone)
       setPhoto(data.photo)
+      setBioText(data.bio)
+      setText(data.phone)
 
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
     }
   }
 
   async function handleSend() {
-  
+    setIsLoading(true)
+
     const firstAccess = localStorage.getItem('firstAccess')
     const defaultVar = 'smilify'
     let path;
@@ -38,6 +56,7 @@ export default function Settings() {
       path = '/update/dentist'
     }
     if (firstAccess && password === defaultVar) {
+      setIsLoading(false)
       await Swal.fire({
         icon: 'question',
         title: "Altere sua senha para validar envio",
@@ -57,6 +76,7 @@ export default function Settings() {
         phone,
         bio
       });
+      setIsLoading(false)
       await Swal.fire({
         icon: 'success',
         title: "Alteração feita com sucesso",
@@ -69,6 +89,7 @@ export default function Settings() {
       localStorage.removeItem('firstAccess')
       window.location.reload()
     } catch (error: any) {
+      setIsLoading(false)
       await Swal.fire({
         icon: 'error',
         title: error.response.data,
@@ -103,23 +124,27 @@ export default function Settings() {
       reader.onloadend = () => {
         setFile(reader.result);
       };
-  
+
       reader.readAsDataURL(file);
     }
   };
 
 
   async function handleSendImage(e: any) {
+    setIsLoading(true)
+
     e.preventDefault()
-    
+
     let path;
     if (user.role == 'clinic') {
       path = '/clinic/update/image/'
     } else {
       path = '/update/image/dentist'
     }
-    
+
     if (!file) {
+      setIsLoading(false)
+
       await Swal.fire({
         icon: 'info',
         title: "Selecione uma foto",
@@ -135,6 +160,8 @@ export default function Settings() {
       await Api.patch(path, {
         file
       })
+      setIsLoading(false)
+
       await Swal.fire({
         icon: 'success',
         title: "Foto atualizada com sucesso",
@@ -144,9 +171,12 @@ export default function Settings() {
         denyButtonText: 'Cancelar',
         confirmButtonText: 'Confirmar'
       })
+
       setFile(null)
       getUser()
     } catch (error: any) {
+      setIsLoading(false)
+
       await Swal.fire({
         icon: 'error',
         title: error.response.data,
@@ -238,7 +268,7 @@ export default function Settings() {
                         type="text"
                         name="phoneNumber"
                         id="phoneNumber"
-                        placeholder={phone}
+                        placeholder={tel?tel:"(XX) X XXXX-XXXX"}
                       />
                     </div>
                   </div>
@@ -349,7 +379,7 @@ export default function Settings() {
                         name="bio"
                         id="bio"
                         rows={6}
-                        placeholder="Escreva sua bio"
+                        placeholder={bioText ? bioText : "Escreva sua bio"}
                       ></textarea>
                     </div>
                   </div>
@@ -362,11 +392,15 @@ export default function Settings() {
                       Cancel
                     </button>
                     <button
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
+                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1 items-center"
                       type="button"
                       onClick={handleSend}
                     >
-                      Enviar
+                      {isLoading ? (
+                        <FontAwesomeIcon icon={faSpinner} spin />
+                      ) : (
+                        'Enviar'
+                      )}
                     </button>
                   </div>
                 </form>
@@ -472,10 +506,14 @@ export default function Settings() {
                     </button>
                     <button
                       onClick={(e) => handleSendImage(e)}
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
+                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70 items-center"
                       type="submit"
                     >
-                      Salvar
+                      {isLoading ? (
+                        <FontAwesomeIcon icon={faSpinner} spin />
+                      ) : (
+                        'Salvar'
+                      )}
                     </button>
                   </div>
                 </form>

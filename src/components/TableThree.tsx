@@ -13,7 +13,6 @@ const TableThree = () => {
     try {
       const { data } = await Api.get('/service/list')
       setService(data)
-      console.log(data)
     } catch (error: any) {
       await Swal.fire({
         icon: 'error',
@@ -62,7 +61,7 @@ const TableThree = () => {
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                      {item.doctor[0].doctor.name}
+                      {/* {item.doctor[0].doctor.name} */}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">

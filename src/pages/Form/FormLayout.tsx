@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import Api from '../../service/api';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 export default function FormLayout() {
   const [room, setRoom] = useState('')
   const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
+
   async function registerDentist() {
+    setIsLoading(true);
+    if (isLoading) return
     if (room === '' || email === "") {
       await Swal.fire({
         icon: 'warning',
@@ -18,17 +24,17 @@ export default function FormLayout() {
         denyButtonText: 'Cancelar',
         confirmButtonText: 'Confirmar'
       })
+      setIsLoading(false);
       return
     }
     try {
       const roomInInt = parseInt(room)
-
       await Api.post('/create/dentist', {
         room: roomInInt,
         email
       })
-      setRoom('')
-      setEmail('')
+      setIsLoading(false);
+
       await Swal.fire({
         icon: 'success',
         title: "Criação bem sucedida",
@@ -38,7 +44,11 @@ export default function FormLayout() {
         denyButtonText: 'Cancelar',
         confirmButtonText: 'Confirmar'
       })
+      setRoom('')
+      setEmail('')
     } catch (error: any) {
+      setIsLoading(false);
+
       await Swal.fire({
         icon: 'error',
         title: error.response.data,
@@ -89,7 +99,11 @@ export default function FormLayout() {
                 />
               </div>
               <button type="button" className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray" onClick={registerDentist}>
-                Criar
+                {isLoading ? (
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                ) : (
+                  'Criar'
+                )}
               </button>
             </div>
           </form>

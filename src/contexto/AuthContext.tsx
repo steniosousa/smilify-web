@@ -28,7 +28,7 @@ export const AuthProvider: any = ({ children }: any) => {
         localStorage.setItem("webToken", data.webToken);
         localStorage.setItem('role', data.role)
         localStorage.setItem("firstAccess", data.firstAccess);
-        navigate('/profile')
+        navigate('/settings')
         return
       }
       localStorage.setItem('role', data.role)

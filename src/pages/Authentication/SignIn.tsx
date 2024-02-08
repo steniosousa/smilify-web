@@ -4,15 +4,18 @@ import { useContext, useState } from 'react';
 import Swal from 'sweetalert2'
 import AuthContext from '../../contexto/AuthContext';
 import useColorMode from '../../hooks/useColorMode';
-
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function SignIn() {
   const [colorMode, setColorMode] = useColorMode();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const context = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function login() {
+    setIsLoading(true)
     if (email === '' || password === '') {
       await Swal.fire({
         icon: 'info',
@@ -23,15 +26,17 @@ export default function SignIn() {
         denyButtonText: 'Cancelar',
         confirmButtonText: 'Confirmar'
       })
+      setIsLoading(false)
       return
     }
-    context.Login({ email, password });
+    await context.Login({ email, password });
+    setIsLoading(false)
   }
 
   return (
     <div >
       <div className="flex flex-row min-h-screen">
-       
+
         <div className="  w-full min-h-screen bg-white hidden sm:block">
           <div className="py-17.5 px-26 text-center">
             <img src={Logo} alt="Logo" />
@@ -177,12 +182,17 @@ export default function SignIn() {
               </div>
 
               <div className="mb-5">
-                <input
+                <button
                   onClick={login}
                   type="button"
-                  value="Acessar"
                   className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                />
+                >
+                  {isLoading ? (
+                    <FontAwesomeIcon icon={faSpinner} spin />
+                  ) : (
+                    "Acessar"
+                  )}
+                </button>
               </div>
 
               <button type={'button'} className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
