@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Logo from '../../images/logo/logo.jpeg';
+import Icon from '../../images/icon/icon.png';
 import { useContext, useState } from 'react';
 import Swal from 'sweetalert2'
 import AuthContext from '../../contexto/AuthContext';
@@ -36,8 +37,7 @@ export default function SignIn() {
   return (
     <div >
       <div className="flex flex-row min-h-screen">
-
-        <div className="  w-full min-h-screen bg-white hidden sm:block">
+        <div className="w-full min-h-screen bg-white hidden sm:block">
           <div className="py-17.5 px-26 text-center">
             <img src={Logo} alt="Logo" />
             <span className=" min-h-screen">
@@ -46,14 +46,19 @@ export default function SignIn() {
           </div>
         </div>
 
-        <div className=" w-full dark:bg-black">
-          <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-            <div className='flex flex-row justify-between '>
+        <div className=" w-full dark:bg-black ">
+
+          <div className="w-full p-4 sm:p-12.5 xl:p-17.5 ">
+            <div className='flex flex-row justify-between sm:mt-8'>
               <div>
                 <span className="mb-1.5 block font-medium">Seja bem-vindo</span>
-                <h2 className="mb-9 text-2xl font-bold text-black dark:text-white dark:text-white">
-                  Acessar  Smilify
-                </h2>
+                <div className='mb-9 flex flex-row gap-2'>
+                  <h2 className="text-2xl font-bold text-black dark:text-white dark:text-white">
+                    Acessar  Smilify
+                  </h2>
+                  <img src={Icon} alt="Logo" className='w-8' />
+
+                </div>
 
               </div>
               <li>

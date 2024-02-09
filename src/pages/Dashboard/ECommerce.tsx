@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import CardFour from '../../components/CardFour.tsx';
 import CardOne from '../../components/CardOne.tsx';
 import CardThree from '../../components/CardThree.tsx';
@@ -8,14 +9,16 @@ import ChartTwo from '../../components/ChartTwo.tsx';
 import ChatCard from '../../components/ChatCard.tsx';
 import MapOne from '../../components/MapOne.tsx';
 import TableOne from '../../components/TableOne.tsx';
+import AuthContext from '../../contexto/AuthContext.tsx';
 
 const ECommerce = () => {
-  
+  const { user }: any = useContext(AuthContext);
   return (
     <>
-
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardOne />
+        {user.role == "dentist" ? (
+          <CardOne />
+        ) : null}
         <CardTwo />
         <CardThree />
         <CardFour />
