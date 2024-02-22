@@ -75,23 +75,16 @@ const ECommerce = () => {
       const { data } = await Api.get('/consult/current')
       setCurrentConsult(data)
       if (data.status == "enter") {
+        setStatus("inService")
         setIcon(stay)
         setTittleButton("Solicitar entrada")
-        setQueue('stay')
-        setStatus('accept')
-        setTitle("Paciente solicitado")
-      }
-      else if (data.status == "enter") {
+      } else if (data.status == "inService") {
+        setStatus("success")
         setIcon(check)
-        setTittleButton("Finalizar consulta")
-        setQueue('quit')
-        setStatus('finished')
-        setTitle("Consulta finalizada")
+        setTittleButton("Finalizar consulta ")
       } else {
         setIcon(remove)
-        setIsLoading(false)
-        setTittleButton("Sem consulta")
-        return
+        setTittleButton("Sem consulta ")
       }
     } catch (error: any) {
       await Swal.fire({
@@ -107,54 +100,51 @@ const ECommerce = () => {
     setIsLoading(false)
   }
 
-  // async function updateStatus() {
-  //   setIsLoading(true)
+  async function updateStatus() {
+    setIsLoading(true)
 
-  //   const confirm = await Swal.fire({
-  //     icon: 'question',
-  //     title: `${titleButton}?`,
-  //     showDenyButton: false,
-  //     showCancelButton: false,
-  //     showConfirmButton: true,
-  //     denyButtonText: 'Cancelar',
-  //     confirmButtonText: 'Confirmar'
-  //   })
-  //   if (!confirm.isConfirmed) {
-  //     setIsLoading(false)
+    const confirm = await Swal.fire({
+      icon: 'question',
+      title: `${titleButton}?`,
+      showDenyButton: false,
+      showCancelButton: false,
+      showConfirmButton: true,
+      denyButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar'
+    })
+    if (!confirm.isConfirmed) {
+      setIsLoading(false)
 
-  //     return
-  //   }
-  //   try {
-  //     const { data } = await Api.post('/appointment/update/status', {
-  //       status,
-  //       queue,
-  //       appointmentId: currentConsutl.id
-  //     })
-  //     await Swal.fire({
-  //       icon: 'success',
-  //       title,
-  //       showDenyButton: false,
-  //       showCancelButton: false,
-  //       showConfirmButton: true,
-  //       denyButtonText: 'Cancelar',
-  //       confirmButtonText: 'Confirmar'
-  //     })
-  //     setAppointment(data)
-  //     getAppointment()
-  //     getQueue()
-  //   } catch (error: any) {
-  //     await Swal.fire({
-  //       icon: 'error',
-  //       title: error.response.data,
-  //       showDenyButton: false,
-  //       showCancelButton: false,
-  //       showConfirmButton: true,
-  //       denyButtonText: 'Cancelar',
-  //       confirmButtonText: 'Confirmar'
-  //     })
-  //   }
-  //   setIsLoading(false)
-  // }
+      return
+    }
+    try {
+      await Api.post('/consult/update', {
+        status,
+        consultId: currentConsutl.id
+      })
+      getCurrentConsult()
+      await Swal.fire({
+        icon: 'success',
+        title,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+    }
+    setIsLoading(false)
+  }
 
   async function getQueue() {
     if (user.role != "dentist") return
@@ -195,7 +185,7 @@ const ECommerce = () => {
             <CardDetailsPatientAndStatus appointment={currentConsutl} />
           </div>
           <CardServiceAndValue appointment={currentConsutl} />
-          <CardActions onSubmite={() => console.log('oi')} isLoading={isLoading} titleButton={titleButton} />
+          <CardActions onSubmite={updateStatus} isLoading={isLoading} titleButton={titleButton} />
         </CardRoot>
         <CardRoot>
           <CardTitle title='Nº DE CONSULTAS' />
