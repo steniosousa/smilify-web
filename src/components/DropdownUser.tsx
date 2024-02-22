@@ -16,7 +16,6 @@ const DropdownUser = () => {
       setName(data.name)
       setPhoto(data.photo)
     } catch (error) {
-      console.log(error)
     }
   }
   function logout() {
