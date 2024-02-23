@@ -69,6 +69,7 @@ const ECommerce = () => {
 
   const [currentConsutl, setCurrentConsult] = useState({} as ConsulttProps)
 
+
   async function getCurrentConsult() {
     setIsLoading(true)
     try {
@@ -117,15 +118,22 @@ const ECommerce = () => {
 
       return
     }
+    let objInUpdate = {} as { status: string, consultId: string, finish?: string }
+    objInUpdate["status"] = status
+    objInUpdate["consultId"] = currentConsutl.id
+
+    if (currentConsutl.status == "inService") {
+      objInUpdate["finish"] = "success"
+    }
+
+
     try {
-      await Api.post('/consult/update', {
-        status,
-        consultId: currentConsutl.id
-      })
+      await Api.post('/consult/update', objInUpdate)
       getCurrentConsult()
+      getAmountConsultation()
       await Swal.fire({
         icon: 'success',
-        title,
+        title: "OK",
         showDenyButton: false,
         showCancelButton: false,
         showConfirmButton: true,
@@ -150,6 +158,7 @@ const ECommerce = () => {
     if (user.role != "dentist") return
     try {
       const { data } = await Api.get("/appointment/queue")
+      console.log(data)
       setAppointmentQueue(data)
     } catch (error: any) {
       await Swal.fire({
@@ -192,7 +201,7 @@ const ECommerce = () => {
           <CardValueCenter value={totalConsults} />
         </CardRoot>
         <CardRoot>
-          <CardTitle title='CONSULTAS CANCELADAS' />
+          <CardTitle title='CONSULTAS FALHAS' />
           <CardValueCenter value={canceledConsults} />
         </CardRoot><CardRoot>
           <CardTitle title='CONSULTAS REALIZADAS' />
