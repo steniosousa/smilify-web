@@ -103,6 +103,19 @@ const ECommerce = () => {
 
   async function updateStatus() {
     setIsLoading(true)
+    if (!currentConsutl) {
+      setIsLoading(false)
+      await Swal.fire({
+        icon: 'info',
+        title: "Não ha solicitação vigente",
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+      return
+    }
 
     const confirm = await Swal.fire({
       icon: 'question',
@@ -158,7 +171,6 @@ const ECommerce = () => {
     if (user.role != "dentist") return
     try {
       const { data } = await Api.get("/appointment/queue")
-      console.log(data)
       setAppointmentQueue(data)
     } catch (error: any) {
       await Swal.fire({
@@ -196,6 +208,7 @@ const ECommerce = () => {
           <CardServiceAndValue appointment={currentConsutl} />
           <CardActions onSubmite={updateStatus} isLoading={isLoading} titleButton={titleButton} />
         </CardRoot>
+       
         <CardRoot>
           <CardTitle title='Nº DE CONSULTAS' />
           <CardValueCenter value={totalConsults} />

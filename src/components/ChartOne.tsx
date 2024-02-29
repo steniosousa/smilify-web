@@ -117,4 +117,3 @@ export default function ChartOne({ AppointmentsQueue }: { AppointmentsQueue: App
     </div>
   );
 };
-

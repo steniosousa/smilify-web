@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import Api from '../service/api';
 
 const options: ApexOptions = {
   colors: ['#3C50E0', '#80CAEE'],
@@ -44,7 +45,7 @@ const options: ApexOptions = {
   },
 
   xaxis: {
-    categories: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    categories: ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
   },
   legend: {
     position: 'top',
@@ -73,34 +74,69 @@ const ChartTwo: React.FC = () => {
   const [state, setState] = useState<ChartTwoState>({
     series: [
       {
-        name: 'Sales',
-        data: [44, 55, 41, 67, 22, 43, 65],
+        name: 'Sucessos',
+        data: [13, 23, 20, 8, 13, 27, 15],
       },
       {
-        name: 'Revenue',
+        name: 'Perdidos',
         data: [13, 23, 20, 8, 13, 27, 15],
       },
     ],
   });
+
+  async function getDatasForGraphic() {
+    try {
+      const { data } = await Api.get('consult/graficWeek')
+
+      const Tagged = {
+        name: 'Sucessos',
+        data: [0, 0, 0, 0, 0, 0, 0],
+      }
+
+      const Losts = {
+        name: 'Perdidos',
+        data: [0, 0, 0, 0, 0, 0, 0],
+      }
+
+      for (var repeat = 0; repeat < 5; repeat++) {
+        const indice = new Date(data[repeat].date).getDay()
+        Tagged.data[indice] = data[repeat].successCount
+        Losts.data[indice] = data[repeat].errorCount
+      }
+
+      setState({
+        series: [
+          Tagged,
+          Losts
+        ]
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getDatasForGraphic()
+  }, [])
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <div className="mb-4 justify-between gap-4 sm:flex">
         <div>
           <h4 className="text-xl font-semibold text-black dark:text-white">
-            Profit this week
+            Crescimento semanal
           </h4>
         </div>
         <div>
           <div className="relative z-20 inline-block">
-            <select
+            {/* <select
               name="#"
               id="#"
               className="relative z-20 inline-flex appearance-none bg-transparent py-1 pl-3 pr-8 text-sm font-medium outline-none"
             >
               <option value="">This Week</option>
               <option value="">Last Week</option>
-            </select>
+            </select> */}
             <span className="absolute top-1/2 right-3 z-10 -translate-y-1/2">
               <svg
                 width="10"
