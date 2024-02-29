@@ -5,10 +5,12 @@ import { Dialog, Transition } from '@headlessui/react'
 
 
 interface serviceProps {
-  name: string,
-  id: string,
-  cost: string,
-  doctor: any[]
+  service: {
+    name: string,
+    id: string,
+    cost: string,
+  },
+  enable: boolean
 }
 const TableThree = () => {
   const [service, setService] = useState([])
@@ -167,6 +169,64 @@ const TableThree = () => {
     setServiceIdSelected(serviceId)
     setOpen(true)
   }
+
+  async function handleEnableService(serviceId: string, enable: boolean) {
+    const newDatas: { serviceId: string, enable: boolean } = {
+      serviceId,
+      enable
+    }
+    try {
+      await Api.post('/service/update', newDatas)
+
+      getDatas()
+
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+
+    }
+  }
+
+  async function handleDeleteService(serviceId: string) {
+    const confirm = await Swal.fire({
+      icon: 'question',
+      title: "Tem certeza que deseja deletar esse serviço?",
+      html: "<p>Ao confirmar deletará o serviço por completo</p>",
+      showDenyButton: false,
+      showCancelButton: false,
+      showConfirmButton: true,
+      denyButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar'
+    })
+    if (!confirm.isConfirmed) {
+      return
+    }
+    try {
+      await Api.post('/service/delete', { serviceId })
+
+      getDatas()
+
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+
+    }
+  }
+
   useEffect(() => { getDatas() }, [])
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -189,22 +249,23 @@ const TableThree = () => {
           </thead>
           {service.map((item: serviceProps) => {
             return (
-              <tbody key={item.id}>
+
+              <tbody key={item.service.id}>
                 <tr>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                      {item.name}
+                      {item.service.name}
                     </h5>
                   </td>
 
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                      <p className="text-sm">${item.cost}</p>
+                      <p className="text-sm">${item.service.cost}</p>
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                      <button className="hover:text-primary">
+                      <button className="hover:text-primary" onClick={() => handleEnableService(item.service.id, !item.enable)}>
                         <svg
                           className="fill-current"
                           width="18"
@@ -221,9 +282,17 @@ const TableThree = () => {
                             d="M9 11.3906C7.67812 11.3906 6.60938 10.3219 6.60938 9C6.60938 7.67813 7.67812 6.60938 9 6.60938C10.3219 6.60938 11.3906 7.67813 11.3906 9C11.3906 10.3219 10.3219 11.3906 9 11.3906ZM9 7.875C8.38125 7.875 7.875 8.38125 7.875 9C7.875 9.61875 8.38125 10.125 9 10.125C9.61875 10.125 10.125 9.61875 10.125 9C10.125 8.38125 9.61875 7.875 9 7.875Z"
                             fill=""
                           />
+                          {item.enable ? null : (
+                            <path
+                              d="M5 5L13 13"
+                              stroke="red"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                            />
+                          )}
                         </svg>
                       </button>
-                      <button className="hover:text-primary">
+                      <button className="hover:text-primary" onClick={() => handleDeleteService(item.service.id)}>
                         <svg
                           className="fill-current"
                           width="18"
@@ -250,7 +319,7 @@ const TableThree = () => {
                           />
                         </svg>
                       </button>
-                      <button className="hover:text-primary" onClick={() => openModal(item.id)}>
+                      <button className="hover:text-primary" onClick={() => openModal(item.service.id)}>
                         <svg
                           className="fill-current"
                           width="18"

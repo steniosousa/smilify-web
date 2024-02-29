@@ -87,6 +87,7 @@ export default function FormElements() {
         denyButtonText: 'Cancelar',
         confirmButtonText: 'Confirmar'
       })
+      getDatas()
       setIsLoading(false)
     } catch (error: any) {
       setIsLoading(false)

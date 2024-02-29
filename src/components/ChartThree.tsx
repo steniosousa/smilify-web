@@ -1,9 +1,12 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import Api from '../service/api';
+import Swal from 'sweetalert2';
+
 
 interface ChartThreeState {
-  series: number[];
+  series: number[]
 }
 
 const options: ApexOptions = {
@@ -11,7 +14,7 @@ const options: ApexOptions = {
     type: 'donut',
   },
   colors: ['#10B981', '#375E83', '#259AE6', '#FFA70B'],
-  labels: ['Remote', 'Hybrid', 'Onsite', 'Leave'],
+  labels: [],
   legend: {
     show: true,
     position: 'bottom',
@@ -48,17 +51,68 @@ const options: ApexOptions = {
   ],
 };
 
-const ChartThree: React.FC = () => {
+export default function ChartThree() {
+  const [datas, setDatas] = useState([])
   const [state, setState] = useState<ChartThreeState>({
-    series: [65, 34, 12, 56],
+    series: [0, 0, 0, 0],
   });
+  const [nameAndPercent, setNameAndPercent] = useState<any[]>([])
 
+
+  async function getDatasForGraphic() {
+    try {
+      const { data } = await Api.get('consult/graficWeek')
+      setDatas(data)
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
+    }
+  }
+
+  function edit() {
+    const series: [] = []
+    let total = 0
+    for (const chave in datas) {
+      if (datas.hasOwnProperty(chave)) {
+        series.push(datas[chave])
+
+        total = total + datas[chave]
+        const uniqueNames = new Set(nameAndPercent.map((item) => item[0].name));
+
+        if (!uniqueNames.has(chave)) {
+          setNameAndPercent((oldStart) => [...oldStart, [{ name: chave, percent: (datas[chave] / total) * 100 }]])
+        }
+        options.labels?.push(chave)
+
+      }
+    }
+    setState({
+      series
+    })
+
+  }
+
+  useEffect(() => {
+    edit()
+  }, [datas])
+
+
+  useEffect(() => {
+    getDatasForGraphic()
+  }, [])
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-5">
       <div className="mb-3 justify-between gap-4 sm:flex">
         <div>
           <h5 className="text-xl font-semibold text-black dark:text-white">
-            Visitors Analytics
+            Crescimento mensal
           </h5>
         </div>
         <div>
@@ -106,45 +160,23 @@ const ChartThree: React.FC = () => {
       </div>
 
       <div className="-mx-8 flex flex-wrap items-center justify-center gap-y-3">
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-primary"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Desktop </span>
-              <span> 65% </span>
-            </p>
-          </div>
-        </div>
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#6577F3]"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Tablet </span>
-              <span> 34% </span>
-            </p>
-          </div>
-        </div>
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#8FD0EF]"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Mobile </span>
-              <span> 45% </span>
-            </p>
-          </div>
-        </div>
-        <div className="w-full px-8 sm:w-1/2">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#0FADCF]"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
-              <span> Unknown </span>
-              <span> 12% </span>
-            </p>
-          </div>
-        </div>
+        {nameAndPercent.map((item: any) => {
+          return (
+            <div key={item[0].name} className="w-full px-8 sm:w-1/2" >
+              <div className="flex w-full items-center">
+                <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-primary"></span>
+                <p className="flex w-full justify-between text-sm font-medium text-black dark:text-white">
+                  <span> {item[0].name} </span>
+                  <span>{item[0].percent.toFixed(0)}% </span>
+                </p>
+              </div>
+            </div>
+
+          )
+        })}
+
       </div>
     </div>
   );
 };
 
-export default ChartThree;
