@@ -1,25 +1,29 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { ptBR } from 'date-fns/locale';
+import { pt } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import "moment/locale/pt-br";
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Api from '../service/api';
 import { DateRange, DayPicker } from 'react-day-picker';
+import AuthContext from '../contexto/AuthContext';
+import moment from "moment";
+
 
 export default function Calendario() {
   const [modal, setModal] = useState(false)
   const [reason, setReason] = useState('Informe o motivo')
   const cancelButtonRef = useRef(null)
+  const { user } = useContext<any>(AuthContext);
   const { state } = useLocation();
   const [events, setEvents] = useState<any>([]);
   const [edit, setEdit] = useState<string>('')
   const [doctorName, setDoctorName] = useState('')
-  const [dateStart, setDateStart] = useState()
-  const [dateTo, setDateTo] = useState()
+  const [dateStart, setDateStart] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
-  const [range, setRange] = useState<DateRange | undefined>({});
+  const [range, setRange] = useState<DateRange | undefined>({ from: undefined, to: undefined });
 
   const minHeight = 6;
 
@@ -40,12 +44,12 @@ export default function Calendario() {
       })
       return
     }
+
     const objSend = {
       userId: state.id,
-      start: new Date(range['from']) as Date,
-      end: new Date(range['to']) as Date,
+      start: range['from'] as Date,
+      end: range['to'] as Date,
       reason
-
     }
     if (reason == '' || !objSend.userId || !objSend.start || !objSend.end) {
       await Swal.fire({
@@ -90,9 +94,8 @@ export default function Calendario() {
       if (!state) {
         const { data } = await Api.get('/vacation/find')
         const arrDatas = data.map((item: any) => {
-          return { id: item.id, reason: item.reason, from: item.start, to: item.to }
+          return { id: item.id, reason: item.reason, from: item.start, to: item.finish }
         })
-        console.log(data)
         setEvents(arrDatas)
       } else {
         const { data } = await Api.get('/vacation/find', {
@@ -120,20 +123,6 @@ export default function Calendario() {
   }
 
 
-  // const handleSelectSlot = ({ start, end }: { start: Date, end: Date }) => {
-  //   const role = localStorage.getItem('role')
-  //   if (role != "clinic") return
-  //   const newEvent = { title: `Férias de ${state ? state.name : doctorName}`, start, end };
-  //   let dateStart = `${start.getDate()}/${start.getMonth()}/${start.getFullYear()}`
-  //   let dateEnd = `${end.getDate() - 1}/${end.getMonth()}/${end.getFullYear()}`
-
-  //   setEvents([...events, newEvent]);
-  //   setModal(!modal)
-  //   setStart(dateStart)
-  //   setEnd(dateEnd)
-
-  // };
-
   function closeModal() {
     setModal(!modal)
     setReason('')
@@ -143,10 +132,9 @@ export default function Calendario() {
 
 
 
-  async function handleEditVacation(id, start, end) {
+  async function handleEditVacation(id: string, start: string, end: string) {
     const role = localStorage.getItem('role')
     if (role != "clinic") return
-    console.log(start, end)
     setDateStart(start)
     setDateTo(end)
     setModal(!modal)
@@ -186,20 +174,21 @@ export default function Calendario() {
 
 
   useEffect(() => {
-    if (range && range['to']) {
+    if (range && range['to'] && user.role != "dentist") {
       setModal(true)
     }
   }, [range])
 
-  useEffect(() => { setRange({}), getDatas() }, [])
+  useEffect(() => { getDatas() }, [])
   const css = `
   .my-selected:not([disabled]) { 
     font-weight: bold; 
     background:blue;
+    color: red;
   }
   .my-selected:hover:not([disabled]) { 
-    border-color: red;
-    color: gray;
+    border-color: blue;
+    color: red;
     background:gray;
   }
   .my-today { 
@@ -208,11 +197,10 @@ export default function Calendario() {
   }.
 `;
   return (
-    <div className="min-w-screen min-h-screen flex  justify-center">
+    <div className="min-w-screen min-h-screen flex  justify-center ">
       <div >
         <style>{css}</style>
         <DayPicker
-          defaultMonth={new Date()}
           modifiersClassNames={{
             selected: 'my-selected',
             today: 'my-today'
@@ -224,7 +212,6 @@ export default function Calendario() {
 
           min={3}
           mode="range"
-          onPrevClick={(item) => console.log(item)}
           selected={range}
           disabled={events}
           styles={{
@@ -246,23 +233,20 @@ export default function Calendario() {
 
           }}
           onSelect={setRange}
-          locale={ptBR}
+          locale={pt}
         />
-        <div className='ml-8'>
+        <div className='ml-8 '>
           <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Eventos:</h2>
-          <ul className="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
+          <ul className="max-w-full  h-8 flex flex-row justify-between space-y-1 text-gray-500 list-inside dark:text-gray-400 ">
             {events.map((item: any) => {
-              const dayInFrom = new Date(item.from).getDate()
-              const monthInFrom = new Date(item.from).getMonth()
-              const yearInFrom = new Date(item.from).getFullYear()
-              const from = `${dayInFrom}/${monthInFrom}/${yearInFrom}`
+              const dateObject = moment(item.from);
+              const from = dateObject.format("DD-MM-YYYY");
 
-              const dayInTo = new Date(item.to).getDate()
-              const monthInTo = new Date(item.to).getMonth()
-              const yearInTo = new Date(item.to).getFullYear()
-              const to = `${dayInTo}/${monthInTo}/${yearInTo}`
+              const dateObjectTo = moment(item.to);
+              const to = dateObjectTo.format("DD-MM-YYYY");
+
               return (
-                <li className="flex items-center flex-row justify-between w-2/3">
+                <li key={item.id} className="flex items-center flex-row justify-between w-3/3 gap-4">
                   <div className='flex flex-row align-center justify-center text-center'>
                     <svg className="w-3.5  me-2 text-primary  flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
@@ -360,6 +344,7 @@ export default function Calendario() {
                                   Confirmar marcação
                                 </Dialog.Title>
                                 <label htmlFor="reason" className="block mb-2 text-sm font-medium  dark:text-white">Selecionar o motivo</label>
+
                                 <select onChange={(i) => setReason(i.target.value)} id="reason" className="bg-gray-50 border dark:text-black border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                   <option value='DEFAULT' defaultValue={'DEFAULT'} hidden>{reason}</option>
                                   <option value="Férias" >Férias</option>
@@ -367,12 +352,11 @@ export default function Calendario() {
                                   <option value="Folga">Folga</option>
                                   <option value="Falta">Falta</option>
                                 </select>
-
                                 {reason === 'Atestado' ? (
                                   <input type='file' accept='pdf' />
                                 ) : null}
                                 <p className="text-sm text-gray-500">
-                                  Deseja confirmar marcação de  a do dia {range ? ` ${range["from"]?.getDate()}/${range["from"]?.getMonth()}  ` : ""} ao dia {range ? ` ${range["to"]?.getDate()}/${range["to"]?.getMonth()}  ` : ""}?
+                                  Deseja confirmar marcação de  {reason}  a do dia {range ? moment(range['from']).format("DD-MM") : ""} ao dia {range ? moment(range['to']).format("DD-MM") : ""}?
                                 </p>
                                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 dark:bg-black gap-3">
                                   <button

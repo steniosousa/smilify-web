@@ -40,7 +40,9 @@ interface appointmentQueueProps {
   date: Date,
   customer: {
     name: string,
-    id: string
+    id: string,
+    email: string,
+    photo: string
   },
   service: {
     name: string,
@@ -56,8 +58,6 @@ const ECommerce = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [titleButton, setTittleButton] = useState('Sem consulta')
   const [status, setStatus] = useState('')
-  const [title, setTitle] = useState('')
-  const [queue, setQueue] = useState('')
 
 
   const [totalConsults, setTotalConsult] = useState(0)
@@ -191,8 +191,16 @@ const ECommerce = () => {
       setTotalConsult(data['total'])
       setAccomplishedConsults(data['accomplished'])
       setCanceledConsults(data['cancelled'])
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: error.response.data,
+        showDenyButton: false,
+        showCancelButton: false,
+        showConfirmButton: true,
+        denyButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar'
+      })
     }
   }
   useEffect(() => { getCurrentConsult(), getQueue(), getAmountConsultation() }, [])
@@ -208,7 +216,7 @@ const ECommerce = () => {
           <CardServiceAndValue appointment={currentConsutl} />
           <CardActions onSubmite={updateStatus} isLoading={isLoading} titleButton={titleButton} />
         </CardRoot>
-       
+
         <CardRoot>
           <CardTitle title='Nº DE CONSULTAS' />
           <CardValueCenter value={totalConsults} />
