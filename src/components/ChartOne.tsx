@@ -2,6 +2,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import dayjs from 'dayjs'
 import moment from 'moment';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 import { useEffect, useState } from 'react';
 interface AppointmentProps {
   id: string,
@@ -101,19 +103,10 @@ export default function ChartOne({ AppointmentsQueue }: { AppointmentsQueue: App
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-8">
-      <Calendar
-        dayPropGetter={dayStyleGetter}
-        localizer={localizer}
-        messages={defaultMessages}
-        startAccessor="start"
-        endAccessor="end"
-        defaultView='agenda'
-        views={['agenda']}
-        components={{ agenda: { date: formatarData, time: formatarHora } }}
-        className='bg-white dark:bg-black text-black dark:text-white text-center justify-center flex p-2 '
-        style={{ minHeight: '500px', borderColor: 'transparent', borderWidth: 0 }}
-        events={events}
-      />
+      <div className="flex mb-4">
+        <div className="w-3/4 bg-gray-500 h-12">akaka</div>
+        <div className="w-1/4 bg-gray-400 h-12">kakak</div>
+      </div>
     </div>
   );
 };

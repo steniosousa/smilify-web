@@ -9,7 +9,7 @@ const Tables = () => {
 
       <div className="flex flex-col gap-10">
         <TableOne />
-        <TableThree />
+        {/* <TableThree /> */}
       </div>
     </>
   );
